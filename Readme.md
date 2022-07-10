@@ -2,6 +2,8 @@
 
 This project is supposed to be a private Numberplate Database. You can set it up and record numberplates you see in it.
 
+This project is centered on Germany, so many specialities are specifically for German numberplates.
+
 ## Idea
 
 ### Database Structure
@@ -36,11 +38,14 @@ The API is supposed to be written in Rust.
 - GET numberplates/bycountry/:country-id
 - GET numberplates/search/:query
 
-- GET meet/:id
-- GET meet/:id/image
-- POST meet/:id
-- POST meet/:id/image
-- GET meet/:id/distancetohome this will return the distance from its home city/country in km
+- GET meet/:uuid
+- GET meet/:uuid/image will get the image directly. alias to GET image/:uuid
+- POST meet/:uuid
+- POST meet/:uuid/image will upload with the correct uuid. Alias to POST image/:uuid
+- GET meet/:uuid/distancetohome this will return the distance from its home city/country in km
+
+- GET image/:uuid
+- POST image/:uuid
 
 I also want to be able to receive some stats. Don't know how to do this yet.
 
@@ -49,8 +54,15 @@ I also want to be able to receive some stats. Don't know how to do this yet.
 - GET stats/cities/:id
 - GET stats/countries/:id
 
-I also want an endpoint that can compress an image. There is probably already a utility that implements this. Just to save some storage from the images.
+- POST compress I also want an endpoint that can compress an image. There is probably already a utility that implements this. Just to save some storage from the images.
+
+- GET country/:id/font gets the ttf file for the font of the country. Some will be shared, but not all
+- GET font/:id
 
 #### garbage collection
 
 orphaned images are deleted after a certain amount of time.
+
+## Unsorted Thoughts
+
+Alles vor den Siegeln wird als "city" gehandhabt. Dh BWL4 ist eine Stadt, BWL1 ist eine andere Stadt.

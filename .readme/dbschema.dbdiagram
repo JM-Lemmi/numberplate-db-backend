@@ -5,6 +5,7 @@ Table numberplates {
   owner string
   notes string
   meets array[uuid]
+  special id
 }
 
 Table meets {
@@ -17,12 +18,15 @@ Table meets {
 Table countries {
   id string [pk]
   location geo
+  font int
+  flag url
 }
 
 Table city {
   id string [pk]
   country string
   location geo
+  coatofarms url
 }
 
 Ref: meets.id > numberplates.meets

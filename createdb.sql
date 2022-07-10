@@ -4,7 +4,8 @@ CREATE TABLE "numberplates" (
   "city" string,
   "owner" string,
   "notes" string,
-  "meets" array[uuid]
+  "meets" array[uuid],
+  "special" id
 );
 
 CREATE TABLE "meets" (
@@ -16,13 +17,16 @@ CREATE TABLE "meets" (
 
 CREATE TABLE "countries" (
   "id" string PRIMARY KEY,
-  "location" geo
+  "location" geo,
+  "font" int,
+  "flag" url
 );
 
 CREATE TABLE "city" (
   "id" string PRIMARY KEY,
   "country" string,
-  "location" geo
+  "location" geo,
+  "coatofarms" url
 );
 
 ALTER TABLE "meets" ADD FOREIGN KEY ("id") REFERENCES "numberplates" ("meets");
