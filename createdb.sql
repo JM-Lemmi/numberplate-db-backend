@@ -15,12 +15,12 @@ CREATE TABLE "meets" (
 );
 
 CREATE TABLE "countries" (
-  "id" string,
+  "id" string PRIMARY KEY,
   "location" geo
 );
 
 CREATE TABLE "city" (
-  "id" string,
+  "id" string PRIMARY KEY,
   "country" string,
   "location" geo
 );

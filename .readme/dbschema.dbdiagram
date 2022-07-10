@@ -15,12 +15,12 @@ Table meets {
  }
 
 Table countries {
-  id string
+  id string [pk]
   location geo
 }
 
 Table city {
-  id string
+  id string [pk]
   country string
   location geo
 }
