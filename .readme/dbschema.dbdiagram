@@ -1,0 +1,16 @@
+Table numberplates {
+  plate string [pk]
+  country string
+  owner string
+  notes string
+  meets array[uuid]
+}
+
+Table meets {
+  id uuid [pk]
+  location geo
+  time timestamp
+  image bool
+ }
+
+Ref: meets.id > numberplates.meets
