@@ -1,6 +1,7 @@
 Table numberplates {
   plate string [pk]
   country string
+  city string
   owner string
   notes string
   meets array[uuid]
@@ -13,4 +14,18 @@ Table meets {
   image bool
  }
 
+Table countries {
+  id string
+  location geo
+}
+
+Table city {
+  id string
+  country string
+  location geo
+}
+
 Ref: meets.id > numberplates.meets
+Ref: countries.id - numberplates.country
+Ref: city.country - countries.id
+Ref: city.id - numberplates.city
