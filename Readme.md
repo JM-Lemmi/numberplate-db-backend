@@ -22,6 +22,12 @@ product BIGINT GENERATED ALWAYS AS (int1 * int2) STORED
 
 but you can't calculate cross tables. so i'll have to see.
 
+#### data collection
+
+Das Bundesamt für Kartographie und Geodäsie bietet [hier](https://gdz.bkg.bund.de/index.php/default/kfz-kennzeichen-1-250-000-kfz250.html) einen Datensatz mit KFZ-Kennzeichen zum Download an.
+
+https://daten.gdz.bkg.bund.de/produkte/sonstige/kfz250/aktuell/kfz250.gk3.csv.zip
+
 ### API features
 
 The API is supposed to be written in Rust.

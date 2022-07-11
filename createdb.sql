@@ -36,3 +36,12 @@ ALTER TABLE "numberplates" ADD FOREIGN KEY ("country") REFERENCES "countries" ("
 ALTER TABLE "countries" ADD FOREIGN KEY ("id") REFERENCES "city" ("country");
 
 ALTER TABLE "numberplates" ADD FOREIGN KEY ("city") REFERENCES "city" ("id");
+
+-- deutsche unterscheidungszeichen
+
+CREATE TABLE de_distinctions (
+  "kfz" string PRIMARY KEY,
+  "name" string,
+  "plz" int
+);
+COPY de_distinctions FROM '/tmp/kfz250.gk3.csv/kfz250/KFZ250.csv' WITH (FORMAT csv);
