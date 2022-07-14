@@ -1,47 +1,53 @@
-CREATE TABLE "numberplates" (
-  "plate" string PRIMARY KEY,
-  "country" string,
-  "city" string,
-  "owner" string,
-  "notes" string,
-  "meets" array[uuid],
-  "special" id
-);
-
 CREATE TABLE "meets" (
-  "id" uuid PRIMARY KEY,
-  "location" geo,
-  "time" timestamp,
-  "image" bool
+  "id" UUID,
+  "location" POINT,
+  "time" TimestampTZ,
+  "image" BOOL,
+  PRIMARY KEY ("id"),
+  UNIQUE ("id")
 );
 
 CREATE TABLE "countries" (
-  "id" string PRIMARY KEY,
-  "location" geo,
-  "font" int,
-  "flag" url
+  "id" VARCHAR(3),
+  "location" POLYGON,
+  "font" INT,
+  "flag" TEXT,
+  PRIMARY KEY ("id"),
+  UNIQUE ("id")
 );
 
-CREATE TABLE "city" (
-  "id" string PRIMARY KEY,
-  "country" string,
-  "location" geo,
-  "coatofarms" url
+CREATE TABLE "cities" (
+  "name" TEXT,
+  "country" TEXT REFERENCES "countries"("id"),
+  "location" POLYGON,
+  "coatofarms" TEXT,
+  PRIMARY KEY ("name")
 );
 
-ALTER TABLE "meets" ADD FOREIGN KEY ("id") REFERENCES "numberplates" ("meets");
+CREATE TABLE "numberplates" (
+  "plate" VARCHAR(8),
+  "country" TEXT REFERENCES "countries"("id"),
+  "city" TEXT REFERENCES "cities"("name"),
+  "owner" TEXT,
+  "notes" TEXT,
+  "meets" UUID REFERENCES "meets"("id"),
+  PRIMARY KEY ("plate"),
+  UNIQUE ("plate")
+);
+
+ALTER TABLE "numberplates" ADD FOREIGN KEY ("meets") REFERENCES "meets" ("id");
 
 ALTER TABLE "numberplates" ADD FOREIGN KEY ("country") REFERENCES "countries" ("id");
 
-ALTER TABLE "countries" ADD FOREIGN KEY ("id") REFERENCES "city" ("country");
+ALTER TABLE "cities" ADD FOREIGN KEY ("country") REFERENCES "countries" ("id");
 
-ALTER TABLE "numberplates" ADD FOREIGN KEY ("city") REFERENCES "city" ("id");
+ALTER TABLE "numberplates" ADD FOREIGN KEY ("city") REFERENCES "cities" ("name");
 
 -- deutsche unterscheidungszeichen
 
-CREATE TABLE de_distinctions (
-  "kfz" string PRIMARY KEY,
-  "name" string,
-  "plz" int
-);
-COPY de_distinctions FROM '/tmp/kfz250.gk3.csv/kfz250/KFZ250.csv' WITH (FORMAT csv);
+--CREATE TABLE de_distinctions (
+--  "kfz" string PRIMARY KEY,
+--  "name" string,
+--  "plz" int
+--);
+--COPY de_distinctions FROM '/tmp/kfz250.gk3.csv/kfz250/KFZ250.csv' WITH (FORMAT csv);
