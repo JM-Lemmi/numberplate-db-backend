@@ -35,7 +35,6 @@ The API is supposed to be written in Go.
 - GET numberplates
 - GET numberplates/recent only the most recent 100 (by me)
 - GET numberplates/:id
-- POST numberplates/new
 - PUT numberplates/:id
 - DELETE numberplates/:id
 - GET numberplates/:id/image (gets the image from the most recent meet)

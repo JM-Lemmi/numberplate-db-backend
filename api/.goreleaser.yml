@@ -1,0 +1,42 @@
+before:
+  hooks:
+    - go mod tidy
+    - rice embed-go
+builds:
+- env:
+  - CGO_ENABLED=0
+  goos:
+  - linux
+  goarch:
+  - amd64
+  - 386
+archives:
+- replacements:
+    386: i386
+    amd64: x86_64
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  name_template: "{{ .Tag }}-next"
+changelog:
+  sort: asc
+  filters:
+    exclude:
+    - '^docs:'
+    - '^test:'
+nfpms:
+  -
+    id: deb
+    package_name: numberplatedb-api
+    homepage: https://github.com/jm-lemmi/numberplate-db-backend
+    maintainer: JM-Lemmi <mail at julian-lemmerich dot de>
+    description: API Layer to communicate with Postgres Backend for Numberplate
+    formats:
+      - deb
+    bindir: /usr/bin
+    files:
+      'misc/numberplatedb-api.service': '/lib/systemd/system/numberplatedb-api.service'
+    config_files:
+      'config.toml': '/etc/numberplatedb-api.toml'
+    scripts:
+      postinstall: 'misc/postinstall.sh'
