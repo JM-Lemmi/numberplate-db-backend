@@ -8,7 +8,8 @@ CREATE TABLE "meets" (
 );
 
 CREATE TABLE "countries" (
-  "id" VARCHAR(3),
+  "id" TEXT,
+  "name" TEXT,
   "location" POLYGON,
   "font" INT,
   "flag" TEXT,
@@ -16,18 +17,9 @@ CREATE TABLE "countries" (
   UNIQUE ("id")
 );
 
-CREATE TABLE "cities" (
-  "name" TEXT,
-  "country" TEXT REFERENCES "countries"("id"),
-  "location" POLYGON,
-  "coatofarms" TEXT,
-  PRIMARY KEY ("name")
-);
-
 CREATE TABLE "numberplates" (
   "plate" VARCHAR(8),
   "country" TEXT REFERENCES "countries"("id"),
-  "city" TEXT REFERENCES "cities"("name"),
   "owner" TEXT,
   "notes" TEXT,
   "meets" UUID REFERENCES "meets"("id"),
@@ -39,9 +31,7 @@ ALTER TABLE "numberplates" ADD FOREIGN KEY ("meets") REFERENCES "meets" ("id");
 
 ALTER TABLE "numberplates" ADD FOREIGN KEY ("country") REFERENCES "countries" ("id");
 
-ALTER TABLE "cities" ADD FOREIGN KEY ("country") REFERENCES "countries" ("id");
-
-ALTER TABLE "numberplates" ADD FOREIGN KEY ("city") REFERENCES "cities" ("name");
+COPY countries ("id", "name") FROM '/tmp/europa.csv' DELIMITER ';' CSV;
 
 -- deutsche unterscheidungszeichen
 
