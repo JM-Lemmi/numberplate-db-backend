@@ -72,3 +72,10 @@ orphaned images are deleted after a certain amount of time.
 ## Unsorted Thoughts
 
 Alles vor den Siegeln wird als "city" gehandhabt. Dh BWL4 ist eine Stadt, BWL1 ist eine andere Stadt.
+
+## Dev
+
+```
+sudo apt-get install -y postgresql-client
+psql --host=localhost --username=postgres --password
+```
