@@ -2,7 +2,6 @@ package main
 
 import (
 	"net/http"
-	"os"
 
 	rice "github.com/GeertJohan/go.rice"
 	"github.com/gorilla/mux"
@@ -16,10 +15,6 @@ var router *mux.Router
 var templateBox *rice.Box
 
 func main() {
-	if len(os.Args) >= 2 {
-		configPath = os.Args[1]
-	}
-
 	log.Info("Welcome to numberplate-db-backend, version " + version)
 
 	// setup router
@@ -28,5 +23,5 @@ func main() {
 	router.HandleFunc("/numberplates", numberplateHandler)
 
 	// listen and serve
-	log.Fatal(http.ListenAndServe(8080, router))
+	log.Fatal(http.ListenAndServe("0.0.0.0:80", router))
 }
