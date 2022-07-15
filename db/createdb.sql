@@ -27,10 +27,6 @@ CREATE TABLE "numberplates" (
   UNIQUE ("plate")
 );
 
-ALTER TABLE "numberplates" ADD FOREIGN KEY ("meets") REFERENCES "meets" ("id");
-
-ALTER TABLE "numberplates" ADD FOREIGN KEY ("country") REFERENCES "countries" ("id");
-
 COPY countries ("id", "name") FROM '/tmp/europa.csv' DELIMITER ';' CSV;
 
 -- deutsche unterscheidungszeichen

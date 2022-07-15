@@ -78,3 +78,7 @@ Alles vor den Siegeln wird als "city" gehandhabt. Dh BWL4 ist eine Stadt, BWL1 i
 sudo apt-get install -y postgresql-client
 psql --host=localhost --username=postgres --password
 ```
+
+```
+curl -d '{"plate":"HGJL1999","country":"DEU","owner":"Julian Lemmerich"}' http://localhost/numberplates/new
+```
