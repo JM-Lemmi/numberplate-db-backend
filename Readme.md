@@ -30,7 +30,7 @@ https://daten.gdz.bkg.bund.de/produkte/sonstige/kfz250/aktuell/kfz250.gk3.csv.zi
 
 ### API features
 
-The API is supposed to be written in Rust.
+The API is supposed to be written in Go.
 
 - GET numberplates
 - GET numberplates/recent only the most recent 100 (by me)
