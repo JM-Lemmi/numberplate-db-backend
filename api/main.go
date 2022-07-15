@@ -1,18 +1,30 @@
 package main
 
 import (
+	"database/sql"
+	"fmt"
 	"net/http"
 
-	rice "github.com/GeertJohan/go.rice"
 	"github.com/gorilla/mux"
 	log "github.com/sirupsen/logrus"
 )
 
+const (
+	host     = "localhost"
+	port     = 25432
+	user     = "postgres"
+	password = "password"
+	dbname   = "numberplates"
+)
+
 var version = "0.1"
 
+// create router
 var router *mux.Router
 
-var templateBox *rice.Box
+// from https://golangdocs.com/golang-postgresql-example
+// create database
+var db, _ = sql.Open("postgres", fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname))
 
 func main() {
 	log.Info("Welcome to numberplate-db-backend, version " + version)
