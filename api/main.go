@@ -32,7 +32,6 @@ func main() {
 	// setup router
 	router = mux.NewRouter()
 	router.HandleFunc("/", indexHandler)
-	router.HandleFunc("/numberplates/new", numberplateNewHandler)
 	router.HandleFunc("/numberplates", numberplateHandler)
 
 	// listen and serve

@@ -32,10 +32,10 @@ https://daten.gdz.bkg.bund.de/produkte/sonstige/kfz250/aktuell/kfz250.gk3.csv.zi
 
 The API is supposed to be written in Go.
 
-- GET numberplates
+- [x] GET numberplates
+- PUT numberplates
 - GET numberplates/recent only the most recent 100 (by me)
 - GET numberplates/:id
-- PUT numberplates/:id
 - DELETE numberplates/:id
 - GET numberplates/:id/image (gets the image from the most recent meet)
 - GET numberplates/:id/meets
