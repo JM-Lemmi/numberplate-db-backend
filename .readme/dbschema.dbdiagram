@@ -1,35 +1,35 @@
-Table numberplates {
-  plate string [pk]
-  country string
-  city string
-  owner string
-  notes string
-  meets array[uuid]
-  special id
+Table "countries" {
+  "id" TEXT [unique, pk]
+  "name" TEXT
+  "location" POLYGON
+  "font" INT
+  "flag" TEXT
 }
 
-Table meets {
-  id uuid [pk]
-  location geo
-  time timestamp
-  image bool
- }
-
-Table countries {
-  id string [pk]
-  location geo
-  font int
-  flag url
+Table "kfz_de" {
+  "kfz" VARCHAR(4) [unique, pk]
+  "ableitung" TEXT
+  "landkreis" TEXT
+  "country" TEXT
 }
 
-Table city {
-  id string [pk]
-  country string
-  location geo
-  coatofarms url
+Table "numberplates" {
+  "plate" VARCHAR(9) [unique, pk]
+  "country" TEXT
+  "owner" TEXT
+  "notes" TEXT
 }
 
-Ref: meets.id > numberplates.meets
-Ref: countries.id - numberplates.country
-Ref: city.country - countries.id
-Ref: city.id - numberplates.city
+Table "meets" {
+  "id" UUID [unique, pk]
+  "plate" VARCHAR(9)
+  "location" POINT
+  "time" time
+  "image" BOOL
+}
+
+Ref:"countries"."id" < "kfz_de"."country"
+
+Ref:"countries"."id" < "numberplates"."country"
+
+Ref:"numberplates"."plate" < "meets"."plate"
