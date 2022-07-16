@@ -63,16 +63,34 @@ func numberplateHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		requestLogger.Infoln(p.Plate, p.Country, p.Owner, p.Notes)
-		resp, e := db.Exec(`INSERT INTO "numberplates"("plate", "country", "owner", "notes") values($1, $2, $3, $4)`, p.Plate, p.Country, p.Owner, p.Notes)
-		CheckError(e)
+		requestLogger.Debugln(p.Plate, p.Country, p.Owner, p.Notes)
 
-		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-		respid, _ := resp.LastInsertId()
-		w.Write([]byte(fmt.Sprint(respid)))
+		if PlateExists(p.Plate) {
+			resp, e := db.Exec(`UPDATE "numberplates" SET country=$2, owner=$3, notes=$4 WHERE plate=$1`, p.Plate, p.Country, p.Owner, p.Notes)
+			CheckError(e)
+			w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+			respid, _ := resp.RowsAffected()
+			w.Write([]byte(fmt.Sprint(respid)))
+		} else {
+			resp, e := db.Exec(`INSERT INTO "numberplates"("plate", "country", "owner", "notes") values($1, $2, $3, $4)`, p.Plate, p.Country, p.Owner, p.Notes)
+			CheckError(e)
+			w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+			respid, _ := resp.RowsAffected()
+			w.Write([]byte(fmt.Sprint(respid)))
+		}
 	} else {
 		w.Write([]byte("Disallowed Method"))
 	}
+}
+
+func PlateExists(plate string) bool {
+	row := db.QueryRow(`SELECT "plate" from "numberplates" WHERE plate=$1`, plate)
+	temp := ""
+	row.Scan(&temp)
+	if temp != "" {
+		return true
+	}
+	return false
 }
 
 func GetIP(r *http.Request) string {
