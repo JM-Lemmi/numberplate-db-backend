@@ -33,26 +33,28 @@ func numberplateHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		requestLogger.Infoln("new request for GET /numberplates")
 
-		rows, err := db.Query(`SELECT "country", "plate", "owner" FROM "numberplates"`)
+		// db query. get all rows
+		rows, err := db.Query(`SELECT "plate", "country", "owner", "notes" FROM "numberplates"`)
 		CheckError(err)
 
-		output := ""
+		// loop over rows and read into Numberplate array
+		var output []Numberplate
 		defer rows.Close()
 		for rows.Next() {
-			var country string
-			var plate string
-			var owner string
+			var entry Numberplate
 
-			err = rows.Scan(&country, &plate, &owner)
+			err = rows.Scan(&entry.Plate, &entry.Country, &entry.Owner, &entry.Notes)
 			CheckError(err)
 
-			output = (output + country + " " + plate + ", " + owner + "\n")
+			output = append(output, entry)
 		}
 
+		// turn into json and respond
+		response, err := json.Marshal(output)
 		CheckError(err)
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.Write(response)
 
-		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
-		w.Write([]byte(output))
 	} else if r.Method == "PUT" {
 		requestLogger.Infoln("new request for PUT /numberplates")
 

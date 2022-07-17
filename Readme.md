@@ -32,7 +32,7 @@ https://daten.gdz.bkg.bund.de/produkte/sonstige/kfz250/aktuell/kfz250.gk3.csv.zi
 
 The API is supposed to be written in Go.
 
-- [ ] GET numberplates
+- [x] GET numberplates
 - [x] PUT numberplates
 - [x] GET numberplates/:plate
 - [x] DELETE numberplates/:plate
