@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
 
 	log "github.com/sirupsen/logrus"
@@ -80,6 +81,33 @@ func numberplateHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	} else {
 		w.Write([]byte("Disallowed Method"))
+	}
+}
+
+func numberplatePlateHandler(w http.ResponseWriter, r *http.Request) {
+	requestLogger := log.WithFields(log.Fields{"client": GetIP(r)})
+	// get plate
+	vars := mux.Vars(r)
+	plate := vars["plate"]
+	requestLogger.Infoln("new " + r.Method + " request for /numberplate/:plate with plate " + plate)
+
+	if r.Method == "GET" {
+		// db query. only need one row, since plate is unique
+		row := db.QueryRow(`SELECT "plate", "country", "owner", "notes" FROM "numberplates" WHERE plate=$1`, plate)
+		// read result into numberplate struct
+		var entry Numberplate
+		row.Scan(&entry.Plate, &entry.Country, &entry.Owner, &entry.Notes)
+
+		// turn into json and respond
+		response, err := json.Marshal(entry)
+		CheckError(err)
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.Write(response)
+
+	} else if r.Method == "DELETE" {
+		_, err := db.Exec(`DELETE "numberplate" WHERE plate=$1`, plate)
+		CheckError(err)
+		w.Write([]byte("deleted " + plate))
 	}
 }
 

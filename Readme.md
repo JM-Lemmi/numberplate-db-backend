@@ -32,22 +32,22 @@ https://daten.gdz.bkg.bund.de/produkte/sonstige/kfz250/aktuell/kfz250.gk3.csv.zi
 
 The API is supposed to be written in Go.
 
-- [x] GET numberplates
+- [ ] GET numberplates
 - [x] PUT numberplates
-- GET numberplates/recent only the most recent 100 (by me)
-- GET numberplates/:id
-- DELETE numberplates/:id
-- GET numberplates/:id/image (gets the image from the most recent meet)
-- GET numberplates/:id/meets
+- [x] GET numberplates/:plate
+- [x] DELETE numberplates/:plate
+- GET numberplates/:plate/meets
 - GET numberplates/bycity/:city-id
 - GET numberplates/bycountry/:country-id
 - GET numberplates/search/:query
 
-- GET meet/:uuid
-- GET meet/:uuid/image will get the image directly. alias to GET image/:uuid
-- POST meet/:uuid
-- POST meet/:uuid/image will upload with the correct uuid. Alias to POST image/:uuid
-- GET meet/:uuid/distancetohome this will return the distance from its home city/country in km
+- GET meets
+- GET meets/recent only the most recent 100 (by me)
+- GET meets/:uuid
+- GET meets/:uuid/image will get the image directly. alias to GET image/:uuid
+- POST meets/:uuid
+- POST meets/:uuid/image will upload with the correct uuid. Alias to POST image/:uuid
+- GET meets/:uuid/distancetohome this will return the distance from its home city/country in km
 
 - GET image/:uuid
 - POST image/:uuid

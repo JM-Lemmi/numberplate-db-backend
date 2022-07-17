@@ -33,6 +33,7 @@ func main() {
 	router = mux.NewRouter()
 	router.HandleFunc("/", indexHandler)
 	router.HandleFunc("/numberplates", numberplateHandler)
+	router.HandleFunc("/numberplates/{plate}", numberplatePlateHandler)
 
 	// listen and serve
 	log.Fatal(http.ListenAndServe("0.0.0.0:80", router))
