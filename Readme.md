@@ -36,13 +36,13 @@ The API is supposed to be written in Go.
 - [x] PUT numberplates
 - [x] GET numberplates/:plate
 - [x] DELETE numberplates/:plate
-- GET numberplates/:plate/meets
 - GET numberplates/bycity/:city-id
 - GET numberplates/bycountry/:country-id
 - GET numberplates/search/:query
 
 - GET meets
 - GET meets/recent only the most recent 100 (by me)
+- GET meets/:plate
 - GET meets/:uuid
 - GET meets/:uuid/image will get the image directly. alias to GET image/:uuid
 - POST meets/:uuid

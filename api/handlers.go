@@ -4,7 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 
+	"github.com/google/uuid"
 	"github.com/gorilla/mux"
 	_ "github.com/lib/pq"
 
@@ -16,6 +18,19 @@ type Numberplate struct {
 	Country string `json:"country"`
 	Owner   string `json:"owner"`
 	Notes   string `json:"notes"`
+}
+
+type Meet struct {
+	ID       uuid.UUID `json:"id"`
+	Plate    string    `json:"plate"`
+	Time     time.Time `json:"date"`
+	Location Point     `json:"location"`
+	Image    bool      `json:"image"`
+}
+
+type Point struct {
+	Lat float64 `json:"lat"`
+	Lng float64 `json:"lng"`
 }
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
@@ -110,6 +125,38 @@ func numberplatePlateHandler(w http.ResponseWriter, r *http.Request) {
 		_, err := db.Exec(`DELETE "numberplate" WHERE plate=$1`, plate)
 		CheckError(err)
 		w.Write([]byte("deleted " + plate))
+	}
+}
+
+func meetsHandler(w http.ResponseWriter, r *http.Request) {
+	requestLogger := log.WithFields(log.Fields{"client": GetIP(r)})
+	if r.Method == "GET" {
+		requestLogger.Infoln("new request for GET /meets")
+
+		// db query. get all rows
+		rows, err := db.Query(`SELECT "id", "plate", "location", "time", "image" FROM "meets"`)
+		CheckError(err)
+
+		// loop over rows and read into Numberplate array
+		var output []Meet
+		defer rows.Close()
+		for rows.Next() {
+			var meet Meet
+			var loc string
+
+			err = rows.Scan(&meet.ID, &meet.Plate, &loc, &meet.Time, &meet.Image)
+			&meet.Location = Point{} // TODO convert loc to point
+			CheckError(err)
+
+			output = append(output, meet)
+		}
+
+		// turn into json and respond
+		response, err := json.Marshal(output)
+		CheckError(err)
+		w.Header().Set("Content-Type", "application/json; charset=utf-8")
+		w.Write(response)
+
 	}
 }
 
