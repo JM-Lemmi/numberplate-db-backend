@@ -35,6 +35,7 @@ func main() {
 	router.HandleFunc("/numberplates", numberplateHandler)
 	router.HandleFunc("/numberplates/{plate}", numberplatePlateHandler)
 	router.HandleFunc("/meets", meetsHandler)
+	router.HandleFunc("/meets/{id}/image", imageHandler)
 
 	// listen and serve
 	log.Fatal(http.ListenAndServe("0.0.0.0:80", router))

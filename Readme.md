@@ -45,12 +45,9 @@ The API is supposed to be written in Go.
 - GET meets/recent only the most recent 100 (by me)
 - GET meets/:plate
 - GET meets/:uuid
-- GET meets/:uuid/image will get the image directly. alias to GET image/:uuid
-- POST meets/:uuid/image will upload with the correct uuid. Alias to POST image/:uuid
+- [x] GET meets/:uuid/image will get the image directly
+- [x] POST meets/:uuid/image will upload with the correct uuid
 - GET meets/:uuid/distancetohome this will return the distance from its home city/country in km
-
-- GET image/:uuid
-- POST image/:uuid
 
 I also want to be able to receive some stats. Don't know how to do this yet.
 

@@ -11,6 +11,7 @@ import (
 	_ "github.com/lib/pq"
 
 	log "github.com/sirupsen/logrus"
+	"path/filepath"
 )
 
 type Numberplate struct {
@@ -177,6 +178,64 @@ func meetsHandler(w http.ResponseWriter, r *http.Request) {
 			w.Write([]byte(fmt.Sprint(respid)))
 		}
 
+	}
+}
+
+func imageHandler(w http.ResponseWriter, r *http.Request) {
+	requestLogger := log.WithFields(log.Fields{"client": GetIP(r)})
+    vars := mux.Vars(r)
+	id := vars["id"]
+	requestLogger.Infoln("new " + r.Method + " request for uploading image for id " + id)
+
+	if r.Method == "POST" {
+		// name should be "file"
+		file, handler, err := r.FormFile("file")
+		if err != nil {
+			fmt.Println("Error Retrieving the File")
+			fmt.Println(err)
+			return
+		}
+		defer file.Close()
+
+		// from https://github.com/mayth/go-simple-upload-server/blob/master/server.go
+		
+		body, err := ioutil.ReadAll(srcFile)
+		if err != nil {
+			logger.WithError(err).Error("failed to read the uploaded content")
+			w.WriteHeader(http.StatusInternalServerError)
+			writeError(w, err)
+			return
+		}
+
+		filename := id + filepath.Ext(info.Filename)
+
+		dstPath := path.Join("/var/www/html/images/", filename) //hardcoded image path TODO make configurable
+		dstFile, err := os.OpenFile(dstPath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
+		if err != nil {
+			logger.WithError(err).WithField("path", dstPath).Error("failed to open the file")
+			w.WriteHeader(http.StatusInternalServerError)
+			writeError(w, err)
+			return
+		}
+		defer dstFile.Close()
+		if written, err := dstFile.Write(body); err != nil {
+			logger.WithError(err).WithField("path", dstPath).Error("failed to write the content")
+			w.WriteHeader(http.StatusInternalServerError)
+			writeError(w, err)
+			return
+		} else if int64(written) != size {
+			logger.WithFields(logrus.Fields{
+				"size":    size,
+				"written": written,
+			}).Error("uploaded file size and written size differ")
+			w.WriteHeader(http.StatusInternalServerError)
+			writeError(w, fmt.Errorf("the size of uploaded content is %d, but %d bytes written", size, written))
+		}
+
+		w.WriteHeader(http.StatusOK)
+	} else if r.Method == "GET" {
+		// GET request returns the image
+		ServeFile(w, r, "/var/www/html/images/" + id + ".jpg")
 	}
 }
 
