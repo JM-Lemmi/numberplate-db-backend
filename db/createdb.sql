@@ -29,7 +29,8 @@ CREATE TABLE "numberplates" (
 CREATE TABLE "meets" (
   "id" UUID,
   "plate" VARCHAR(9) REFERENCES "numberplates"("plate"),
-  "location" POINT,
+  "lat" FLOAT,
+  "lon" FLOAT,
   "time" TimestampTZ,
   "image" BOOL,
   PRIMARY KEY ("id"),

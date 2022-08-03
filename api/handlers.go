@@ -24,13 +24,9 @@ type Meet struct {
 	ID       uuid.UUID `json:"id"`
 	Plate    string    `json:"plate"`
 	Time     time.Time `json:"date"`
-	Location Point     `json:"location"`
+	Lat      float32   `json:"lat"`
+	Lon      float32   `json:"lon"`
 	Image    bool      `json:"image"`
-}
-
-type Point struct {
-	Lat float64 `json:"lat"`
-	Lng float64 `json:"lng"`
 }
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
@@ -134,7 +130,7 @@ func meetsHandler(w http.ResponseWriter, r *http.Request) {
 		requestLogger.Infoln("new request for GET /meets")
 
 		// db query. get all rows
-		rows, err := db.Query(`SELECT "id", "plate", "location", "time", "image" FROM "meets"`)
+		rows, err := db.Query(`SELECT "id", "plate", "lat", "lon", "time", "image" FROM "meets"`)
 		CheckError(err)
 
 		// loop over rows and read into Numberplate array
@@ -142,10 +138,8 @@ func meetsHandler(w http.ResponseWriter, r *http.Request) {
 		defer rows.Close()
 		for rows.Next() {
 			var meet Meet
-			var loc string
 
-			err = rows.Scan(&meet.ID, &meet.Plate, &loc, &meet.Time, &meet.Image)
-			&meet.Location = Point{} // TODO convert loc to point
+			err = rows.Scan(&meet.ID, &meet.Plate, &meet.lat, &meet.lon, &meet.Time, &meet.Image)
 			CheckError(err)
 
 			output = append(output, meet)
