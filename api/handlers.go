@@ -151,11 +151,47 @@ func meetsHandler(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json; charset=utf-8")
 		w.Write(response)
 
+	} else if r.Method == "PUT" {
+		requestLogger.Infoln("new request for PUT /meets")
+
+		d := json.NewDecoder(r.Body)
+		m := &Meet{}
+		err := d.Decode(m)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		// client generates a UUID for a new entry. If this turns out to be a mistake later, there has to be logic to handle missing ID.
+		if MeetExists(m.ID) {
+			resp, e := db.Exec(`UPDATE "meets" SET plate=$2, lat=$3, lon=$4, time=$5, image=$6 WHERE id=$1`, m.ID, m.Plate, m.lat, m.lon, m.Time, m.Image)
+			CheckError(e)
+			w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+			respid, _ := resp.RowsAffected()
+			w.Write([]byte(fmt.Sprint(respid)))
+		} else {
+			resp, e := db.Exec(`INSERT INTO "meets"("id", "plate", "lat", "lon", "time", "image") values($1, $2, $3, $4, $5, $6)`, m.ID, m.Plate, m.lat, m.lon, m.Time, m.Image)
+			CheckError(e)
+			w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+			respid, _ := resp.RowsAffected()
+			w.Write([]byte(fmt.Sprint(respid)))
+		}
+
 	}
 }
 
 func PlateExists(plate string) bool {
 	row := db.QueryRow(`SELECT "plate" from "numberplates" WHERE plate=$1`, plate)
+	temp := ""
+	row.Scan(&temp)
+	if temp != "" {
+		return true
+	}
+	return false
+}
+
+func MeetExists(uuid uuid.UUID) bool {
+	row := db.QueryRow(`SELECT "ID" from "meets" WHERE ID=$1`, uuid)
 	temp := ""
 	row.Scan(&temp)
 	if temp != "" {
